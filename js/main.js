@@ -267,6 +267,21 @@
         .from(s.querySelectorAll('.ncard .num'), { scale: 0, duration: .45, ease: 'back.out(2.4)', stagger: .18 }, '<.2')
         .fromTo(cards[0], { boxShadow: '0 0 0 0 rgba(122,193,88,0)' }, { boxShadow: '0 0 60px 6px rgba(122,193,88,.45)', duration: .45, yoyo: true, repeat: 1, ease: 'power2.out' }, '-=.1');
     },
+    // 17 · O MD do futuro: carrossel infinito de seções
+    (s, tl, ctx) => {
+      const tracks = [...s.querySelectorAll('.track')];
+      // duplica o conteúdo de cada faixa para o loop não ter emenda
+      tracks.forEach(t => { if (!t.dataset.dup) { t.dataset.dup = 1; t.append(...[...t.children].map(c => c.cloneNode(true))); } });
+      tl.from(s.querySelector('.top-pill'), up(20))
+        .from(s.querySelector('.top-title'), up(), '-=.4')
+        .from(s.querySelector('.s17-body'), up(20), '-=.35')
+        .from(tracks, { y: 60, opacity: 0, duration: .8, ease: EASE, stagger: .15 }, '-=.3');
+      tracks.forEach((t, i) => {
+        const half = t.scrollWidth / 2;
+        const rev = t.classList.contains('rev');
+        ctx.loop(gsap.fromTo(t, { x: rev ? -half : 0 }, { x: rev ? 0 : -half, duration: 46 + i * 8, ease: 'none', repeat: -1 }));
+      });
+    },
   ];
 
   function sectionsBuilder(s, tl) {
