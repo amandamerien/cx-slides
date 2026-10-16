@@ -40,7 +40,7 @@ Cada slide vira uma página 1920×1080 no estado final.
 
 ## Carrossel de seções (slide 17)
 
-Coloque os prints em `img/secoes/` e, no slide 17 do `index.html`, troque cada card-modelo `<figure class="shot sk ...">…</figure>` por `<figure class="shot"><img src="img/secoes/arquivo.png" alt=""></figure>`. As duas faixas se duplicam sozinhas para o loop não ter emenda.
+As 25 seções ficam em `img/secoes/` (JPEG 800px). Para incluir outra, adicione `<figure class="shot"><img src="img/secoes/arquivo.jpg" alt=""></figure>` numa das duas faixas do slide 17 no `index.html`. As duas faixas se duplicam sozinhas para o loop não ter emenda.
 
 ## Cores
 

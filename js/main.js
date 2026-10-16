@@ -279,7 +279,7 @@
       tracks.forEach((t, i) => {
         const half = t.scrollWidth / 2;
         const rev = t.classList.contains('rev');
-        ctx.loop(gsap.fromTo(t, { x: rev ? -half : 0 }, { x: rev ? 0 : -half, duration: 46 + i * 8, ease: 'none', repeat: -1 }));
+        ctx.loop(gsap.fromTo(t, { x: rev ? -half : 0 }, { x: rev ? 0 : -half, duration: half / (62 - i * 8), ease: 'none', repeat: -1 })); // ~62px/s e ~54px/s
       });
     },
   ];
