@@ -52,35 +52,18 @@
   /* Cada builder recebe (s, tl, ctx). ctx.loop() registra animações contínuas;
      ctx.done() registra o que começa quando a entrada termina. */
   const builders = [
-    // 1 · Capa: feixe de luz convergindo, órbitas e pontos em movimento
+    // 1 · Capa: fundo "Waves" em WebGL (js/shader-bg.js)
     (s, tl, ctx) => {
       const q = sel => s.querySelector(sel), qa = sel => s.querySelectorAll(sel);
-      const orbits = [...qa('.c-orbits > *')];
-      orbits.forEach(o => { const L = o.getTotalLength(); gsap.set(o, { strokeDasharray: L, strokeDashoffset: L }); });
-      tl.from(q('.s1-art'), { opacity: 0, duration: .6, ease: 'power1.out' }, 0)
-        .from(q('.c-glow'), { opacity: 0, duration: 1, ease: 'power1.out' }, 0)
-        .from(q('.c-bands'), { opacity: 0, x: -120, duration: 1, ease: 'power3.out' }, .1)
-        .from(q('.c-beam'), { scaleX: 0, opacity: 0, transformOrigin: '0% 50%', duration: .9, ease: 'power3.inOut' }, .25)
-        .from(q('.c-head'), { scale: 0, transformOrigin: '50% 50%', duration: .5, ease: 'back.out(2.4)' }, .95)
-        .from(q('.c-bow'), { opacity: 0, x: -24, duration: .5, ease: EASE }, 1.05)
-        .to(orbits, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: .07 }, .45)
-        .from(qa('.c-dots circle'), { opacity: 0, duration: .4, stagger: .08 }, 1.2)
-        .from(q('.s1-content .pill'), up(20), .35)
-        .from(qa('.t-hero > span'), { y: 70, opacity: 0, duration: .8, ease: 'power4.out', stagger: .12 }, .45)
+      const cv = q('.s1-bg');
+      cv._bg = cv._bg || window.ShaderBackground(cv);
+      cv._bg.frame(0);
+      ctx.loop(cv._bg).start(); // para sozinho quando o slide sai (ou com reduced-motion)
+      tl.from(cv, { opacity: 0, duration: .9, ease: 'power1.out' }, 0)
+        .from(q('.s1-content .pill'), up(20), .3)
+        .from(qa('.t-hero > span'), { y: 70, opacity: 0, duration: .8, ease: 'power4.out', stagger: .12 }, .4)
         .from(q('.s1-sub'), up(30), '-=.35')
         .from(q('.s1-by'), up(20), '-=.3');
-      // pontos percorrendo as órbitas
-      qa('.c-dots circle').forEach(c => {
-        const [cx, cy, rx, ry, ph, per] = c.dataset.orbit.split(',').map(Number);
-        const o = { t: ph };
-        const place = () => { const a = o.t * Math.PI * 2; c.setAttribute('cx', cx + rx * Math.cos(a)); c.setAttribute('cy', cy + ry * Math.sin(a)); };
-        place();
-        ctx.loop(gsap.to(o, { t: ph + 1, duration: per, ease: 'none', repeat: -1, onUpdate: place }));
-      });
-      ctx.loop(gsap.to(q('.c-beam'), { opacity: .82, duration: 2.4, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.2 }));
-      ctx.loop(gsap.to(q('.c-head'), { scale: 1.18, transformOrigin: '50% 50%', duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.5 }));
-      ctx.loop(gsap.to(q('.c-orbits'), { rotation: 2.5, svgOrigin: '1192 400', duration: 9, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
-      ctx.loop(gsap.to(q('.c-bands'), { opacity: .8, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.4 }));
     },
     // 2 · Como era
     (s, tl) => {

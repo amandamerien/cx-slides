@@ -52,6 +52,7 @@ Paleta do Figma Clickmax: verde `#7AC158` (pílulas, números, destaques), gradi
 index.html        conteúdo dos 16 slides
 css/style.css     visual (cores, tipografia, layout de cada slide)
 js/main.js        navegação, escala 16:9, animações por slide, autoplay e gravação
+js/shader-bg.js   fundo animado da capa (shader "Waves" do 21st.dev em WebGL, paleta verde em COLORS)
 img/clickmax-logo.png  logo exportado do Figma (preto; nos slides escuros fica branco via CSS)
 img/autoridade-*  foto, recorte e letras decorativas da seção "Autoridade" (Figma Pixel Builder), usada no slide 5
 vendor/gsap.min.js

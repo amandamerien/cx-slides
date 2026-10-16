@@ -13,61 +13,9 @@
 <div id="stage">
 
 <!-- 1 · Capa -->
-<section class="slide dark" data-sec="0">
-  <!-- arte da capa: feixe convergindo + órbitas, nas cores da marca -->
-  <svg class="s1-art" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <radialGradient id="c-corner" r="1"><stop offset="0" stop-color="#B9ED80" stop-opacity=".55"/><stop offset=".45" stop-color="#48B879" stop-opacity=".22"/><stop offset="1" stop-color="#48B879" stop-opacity="0"/></radialGradient>
-      <linearGradient id="c-right" x1="1920" y1="0" x2="1560" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#DDF7C2" stop-opacity=".95"/><stop offset=".06" stop-color="#85CD44" stop-opacity=".5"/><stop offset=".45" stop-color="#48B879" stop-opacity=".12"/><stop offset="1" stop-color="#48B879" stop-opacity="0"/></linearGradient>
-      <linearGradient id="c-band" x1="0" y1="0" x2="1250" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#E3F8CC"/><stop offset=".45" stop-color="#85CD44"/><stop offset="1" stop-color="#48B879" stop-opacity=".15"/></linearGradient>
-      <linearGradient id="c-beam" x1="0" y1="0" x2="1190" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F4FFE8"/><stop offset=".6" stop-color="#D9F5BC" stop-opacity=".85"/><stop offset="1" stop-color="#FFFFFF"/></linearGradient>
-      <filter id="c-xl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="48"/></filter>
-      <filter id="c-m" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
-      <filter id="c-s" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5"/></filter>
-    </defs>
-    <rect width="1920" height="1080" fill="#0A0F0B"/>
-    <g class="c-glow">
-      <ellipse cx="-60" cy="-40" rx="760" ry="420" fill="url(#c-corner)"/>
-      <ellipse cx="-60" cy="1120" rx="760" ry="460" fill="url(#c-corner)"/>
-      <rect x="1500" width="420" height="1080" fill="url(#c-right)"/>
-    </g>
-    <g class="c-bands" fill="none">
-      <path d="M -260 -330 Q 2560 400 -260 1130" stroke="url(#c-band)" stroke-width="200" opacity=".55" filter="url(#c-xl)"/>
-      <path d="M -260 -330 Q 2560 400 -260 1130" stroke="url(#c-band)" stroke-width="34" opacity=".4" filter="url(#c-m)"/>
-      <path d="M -200 -200 Q 2420 400 -200 1000" stroke="#EFFFD9" stroke-width="1.4" opacity=".22"/>
-    </g>
-    <!-- sombra atrás do texto para manter a leitura -->
-    <ellipse class="c-scrim" cx="560" cy="860" rx="820" ry="250" fill="#0A0F0B" opacity=".85" filter="url(#c-xl)"/>
-    <g class="c-orbits" fill="none" stroke="#EFFFD9" stroke-opacity=".26" stroke-width="1.4">
-      <ellipse cx="880" cy="400" rx="540" ry="250"/>
-      <ellipse cx="910" cy="400" rx="460" ry="150"/>
-      <ellipse cx="960" cy="400" rx="330" ry="78"/>
-      <ellipse cx="1050" cy="400" rx="185" ry="34"/>
-      <circle cx="1215" cy="400" r="150"/>
-      <ellipse cx="1430" cy="400" rx="70" ry="330"/>
-      <ellipse cx="1600" cy="400" rx="55" ry="520"/>
-      <ellipse cx="560" cy="-40" rx="470" ry="260"/>
-    </g>
-    <g class="c-dots" fill="#EFFFD9">
-      <circle r="3.6" data-orbit="880,400,540,250,.18,26"/>
-      <circle r="3.2" data-orbit="910,400,460,150,.62,19"/>
-      <circle r="3" data-orbit="960,400,330,78,.85,13"/>
-      <circle r="3.4" data-orbit="1215,400,150,150,.08,15"/>
-      <circle r="3" data-orbit="1430,400,70,330,.4,21"/>
-    </g>
-    <g class="c-beam">
-      <path d="M -40 270 C 460 352, 880 390, 1188 400 C 880 410, 460 448, -40 530 Z" fill="url(#c-beam)" opacity=".75" filter="url(#c-m)"/>
-      <path d="M -40 352 C 480 384, 900 397, 1188 400 C 900 403, 480 416, -40 448 Z" fill="#FFFFFF" filter="url(#c-s)"/>
-    </g>
-    <g class="c-bow" fill="none">
-      <path d="M 1228 318 Q 1272 400 1228 482" stroke="#B9ED80" stroke-width="10" opacity=".6" filter="url(#c-m)"/>
-      <path d="M 1228 318 Q 1272 400 1228 482" stroke="#DDF7C2" stroke-width="2.2"/>
-    </g>
-    <g class="c-head">
-      <circle cx="1192" cy="400" r="30" fill="#B9ED80" opacity=".55" filter="url(#c-m)"/>
-      <ellipse cx="1194" cy="400" rx="10" ry="7" fill="#FFFFFF"/>
-    </g>
-  </svg>
+<section class="slide dark cover" data-sec="0">
+  <!-- fundo animado "Waves" (WebGL), nas cores da marca -->
+  <canvas class="s1-bg" aria-hidden="true"></canvas>
   <div class="s1-content">
     <span class="pill green">Alinhamento de produto</span>
     <h1 class="t-hero lines"><span>Da galeria de estilos</span><span>às estruturas validadas</span></h1>
@@ -392,6 +340,7 @@ E agora esse espaço também pode ser seu.</p>
 </div>
 
 <script src="vendor/gsap.min.js"></script>
+<script src="js/shader-bg.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
