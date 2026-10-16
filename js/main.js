@@ -277,8 +277,8 @@
       // âncoras medidas antes de qualquer transform da entrada
       const a1 = rel(solo, s), a2 = rel(group, s);
       const springs = [
-        makeSpring(ctx, s.querySelector('.avatar.red'), s.querySelector('.spr.red'), { x: a1.x + a1.w * .72, y: a1.y }, { x: 62, y: -78 }),
-        makeSpring(ctx, s.querySelector('.avatar.green'), s.querySelector('.spr.green'), { x: a2.x + a2.w * .74, y: a2.y + a2.h }, { x: 132, y: -6 }),
+        makeSpring(ctx, s.querySelector('.avatar.red'), s.querySelector('.spr.red'), solo, { x: a1.x + a1.w * .72, y: a1.y }, { x: 62, y: -78 }),
+        makeSpring(ctx, s.querySelector('.avatar.green'), s.querySelector('.spr.green'), group, { x: a2.x + a2.w * .74, y: a2.y + a2.h }, { x: 132, y: -6 }),
       ];
       tl.from(s.querySelector('.top-pill'), up(20))
         .from(s.querySelector('.top-title'), up(), '-=.4')
@@ -328,10 +328,10 @@
     return out.join(' ');
   }
 
-  // física de mola (rigidez 200, amortecimento 16, como no original) + arraste + balanço sozinho
-  function makeSpring(ctx, el, path, anchor, rest) {
+  // física de mola (rigidez 200, amortecimento 16, como no original) + arraste + segue o mouse no card + balanço sozinho
+  function makeSpring(ctx, el, path, hoverEl, anchor, rest) {
     const p = { x: rest.x, y: rest.y }, v = { x: 0, y: 0 };
-    let target = rest, drag = null, nextKick = 2, idleT = 0, live = false;
+    let target = rest, drag = null, hover = false, nextKick = 2, idleT = 0, live = false;
     const draw = () => {
       el.style.transform = `translate(${anchor.x + p.x}px, ${anchor.y + p.y}px)`;
       path.setAttribute('d', springPath(anchor.x, anchor.y, anchor.x + p.x, anchor.y + p.y));
@@ -344,7 +344,7 @@
         v.x += (-200 * (p.x - target.x) - 16 * v.x) * dt; v.y += (-200 * (p.y - target.y) - 16 * v.y) * dt;
         p.x += v.x * dt; p.y += v.y * dt;
       }
-      if (!drag && (idleT += dt * n) > nextKick) { // de vez em quando leva um "peteleco"
+      if (!drag && !hover && (idleT += dt * n) > nextKick) { // de vez em quando leva um "peteleco"
         idleT = 0; nextKick = 2 + Math.random() * 1.6;
         const ang = Math.random() * Math.PI * 2; v.x += Math.cos(ang) * 520; v.y += Math.sin(ang) * 520;
       }
@@ -353,16 +353,21 @@
     const stagePt = e => { const r = stage.getBoundingClientRect(); return { x: (e.clientX - r.left) / scale, y: (e.clientY - r.top) / scale }; };
     const down = e => { e.stopPropagation(); try { el.setPointerCapture(e.pointerId); } catch {} el.classList.add('dragging'); const q = stagePt(e); drag = { dx: anchor.x + p.x - q.x, dy: anchor.y + p.y - q.y }; };
     const move = e => { if (!drag) return; const q = stagePt(e); target = { x: q.x + drag.dx - anchor.x, y: q.y + drag.dy - anchor.y }; };
-    const release = () => { if (!drag) return; drag = null; target = rest; el.classList.remove('dragging'); idleT = 0; };
+    const release = () => { if (!drag) return; drag = null; target = hover ? target : rest; el.classList.remove('dragging'); idleT = 0; };
+    // passar o mouse no card: a foto vai até o cursor; ao sair, volta
+    const hMove = e => { if (drag || !live) return; hover = true; const q = stagePt(e); target = { x: q.x - anchor.x, y: q.y - anchor.y }; };
+    const hLeave = () => { hover = false; if (!drag) target = rest; idleT = 0; };
     const stop = e => e.stopPropagation(); // não deixa o clique avançar o slide
     el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move);
     el.addEventListener('pointerup', release); el.addEventListener('pointercancel', release); el.addEventListener('click', stop);
+    hoverEl.addEventListener('pointermove', hMove); hoverEl.addEventListener('pointerleave', hLeave);
     draw();
     gsap.ticker.add(step);
     ctx.loop({ kill: () => {
       live = false; gsap.ticker.remove(step);
       el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move);
       el.removeEventListener('pointerup', release); el.removeEventListener('pointercancel', release); el.removeEventListener('click', stop);
+      hoverEl.removeEventListener('pointermove', hMove); hoverEl.removeEventListener('pointerleave', hLeave);
     } });
     return {
       launch() { p.x = 0; p.y = 0; v.x = rest.x * 9; v.y = rest.y * 9; live = !reduce.matches; draw(); if (!live) { p.x = rest.x; p.y = rest.y; draw(); } },
