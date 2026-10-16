@@ -38,7 +38,7 @@ b { font-weight: 600; }
 .topbar { position: absolute; left: var(--x); right: var(--x); top: 58px; height: 48px; display: flex; align-items: center; justify-content: space-between; z-index: 5; }
 .logo { display: block; height: 50px; width: auto; }
 .slide.dark .logo { filter: invert(1); }
-.nav { display: flex; gap: 42px; font-size: 24px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.nav { display: flex; gap: 36px; font-size: 18px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
 .nav span { position: relative; transition: color .3s; }
 .slide.dark .nav span { color: var(--text-dark); }
 .slide.light .nav span { color: var(--text-light); }
@@ -96,17 +96,17 @@ b { font-weight: 600; }
 .sphere::before, .sphere::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
 .sphere::before { left: 8%; top: 14%; width: 118%; height: 100%; border: 2px solid rgba(239, 255, 217, .28); transform: rotate(-18deg); }
 .sphere::after { left: 14%; top: 22%; width: 110%; height: 96%; border: 3px solid rgba(72, 184, 121, .35); transform: rotate(-8deg); }
-.s1-a { width: 422px; height: 422px; left: 1239px; top: 149px; }
-.s1-b { width: 150px; height: 150px; left: 1060px; top: 640px; }
-.s1-c { width: 220px; height: 220px; left: 1541px; top: 680px; }
 .s6-sphere { width: 360px; height: 360px; left: 1380px; top: 555px; }
 .s12-sphere { width: 240px; height: 240px; left: 1500px; top: 150px; }
 
 /* ---------- 1 · Capa ---------- */
-.s1-content { position: absolute; left: var(--x); top: 398px; }
-.s1-sub { margin-top: 38px; }
-.s1-meta { display: flex; align-items: center; gap: 26px; margin-top: 36px; }
-.s1-by { font-size: 24px; }
+.s1-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+.s1-content { position: absolute; left: var(--x); top: 560px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+.s1-content .t-hero { margin-top: 30px; font-size: 88px; line-height: 1.12; }
+.s1-sub { margin-top: 26px; }
+.s1-by { margin-top: 22px; font-size: 24px; }
+.slide.dark .s1-content .s1-sub { color: #C4C6CA; }
+.slide.dark .s1-content .s1-by { color: #A3A5AA; }
 
 /* ---------- 2 · Como era ---------- */
 .s2-left { position: absolute; left: var(--x); top: 166px; width: 700px; }
