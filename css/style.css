@@ -122,6 +122,18 @@ b { font-weight: 600; }
 .c-gray { background: var(--light); color: var(--black); } .c-gray p { color: var(--text-light); }
 .c-green { background: var(--green-grad); color: var(--black); }
 
+/* vidro estilhaçado (montado em JS: buildShatter) */
+.s3-cards.is-shattered { visibility: hidden; }
+.shatter { position: absolute; perspective: 1800px; pointer-events: none; }
+.shatter .tilt, .shatter .inner { position: absolute; inset: 0; transform-style: preserve-3d; }
+.shard { position: absolute; inset: 0; will-change: transform; }
+.shard .shard-copy { left: 0; top: 0; visibility: visible; }
+.shard .spec { position: absolute; inset: 0; background: linear-gradient(var(--a), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 60%); opacity: var(--spec, .06); mix-blend-mode: screen; }
+.shard svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.shard path { fill: none; stroke: rgba(255, 255, 255, .5); stroke-width: 3; stroke-linecap: round; }
+.shatter .impact { position: absolute; width: 360px; height: 360px; margin: -180px 0 0 -180px; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, .9) 0%, rgba(185, 237, 128, .35) 30%, rgba(185, 237, 128, 0) 70%); }
+
 /* ---------- 4 / 5 · duo ---------- */
 .duo { position: absolute; left: var(--x); top: 348px; width: 1664px; height: 603px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .duo .card { display: flex; flex-direction: column; align-items: flex-start; }

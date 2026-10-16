@@ -71,13 +71,50 @@
         .from(s.querySelectorAll('.s2-left .body'), { ...up(20), stagger: .12 }, '-=.35')
         .from(s.querySelectorAll('.brand'), { y: 30, scale: .94, opacity: 0, duration: .5, ease: EASE, stagger: .08 }, .3);
     },
-    // 3 · O problema
-    (s, tl) => {
+    // 3 · O problema: os cards chegam como vidro estilhaçado
+    (s, tl, ctx) => {
+      const src = s.querySelector('.s3-cards');
+      const sh = s.querySelector('.shatter') || buildShatter(s, src);
+      const shards = [...sh.querySelectorAll('.shard')];
+      const tilt = sh.querySelector('.tilt'), inner = sh.querySelector('.inner'), impact = sh.querySelector('.impact');
       tl.from(s.querySelector('.pill'), up(20))
         .from(s.querySelector('.t-h2'), up(), '-=.4')
-        .from(s.querySelector('.s3-left .body'), up(20), '-=.35')
-        .from(s.querySelectorAll('.pcard'), { x: -80, opacity: 0, duration: .7, ease: EASE, stagger: .22 }, .45)
-        .from(s.querySelectorAll('.pcard .num'), { scale: 0, duration: .45, ease: 'back.out(2.4)', stagger: .22 }, .75);
+        .from(s.querySelector('.s3-left .body'), up(20), '-=.35');
+      // impacto: os cacos voam de fora e se encaixam, mas ficam quebrados
+      shards.forEach((el, i) => {
+        const d = el._d;
+        tl.fromTo(el, {
+          x: d.ux * (260 + d.ring * 220), y: d.uy * (260 + d.ring * 220), z: 420,
+          rotationZ: (Math.random() - .5) * 50, rotationX: (Math.random() - .5) * 70, rotationY: (Math.random() - .5) * 70, opacity: 0,
+        }, { x: d.fx, y: d.fy, z: d.z, rotationZ: d.rz, rotationX: d.rx, rotationY: d.ry, opacity: 1, duration: .8, ease: 'power3.out' }, .4 + (d.ring * .12) + (i % 8) * .025);
+      });
+      tl.fromTo(impact, { opacity: .95, scale: .2 }, { opacity: 0, scale: 1.8, duration: .7, ease: 'power2.out' }, 1.15)
+        .fromTo(sh, { x: 0 }, { keyframes: [{ x: -7 }, { x: 6 }, { x: -3 }, { x: 0 }], duration: .32, ease: 'none' }, 1.15);
+
+      // luz especular: cada caco brilha conforme a direção da inclinação
+      const light = (mx, my) => {
+        const ma = Math.atan2(my, mx), k = Math.min(1, Math.hypot(mx, my));
+        shards.forEach(el => el.style.setProperty('--spec', (.04 + .34 * k * Math.max(0, Math.cos(el._d.a - ma))).toFixed(3)));
+      };
+      light(.4, -.6);
+      // sem mouse: o painel oscila sozinho (funciona no autoplay e na gravação)
+      const idle = { t: 0 };
+      ctx.loop(gsap.to(idle, { t: Math.PI * 2, duration: 9, ease: 'none', repeat: -1, onUpdate: () => {
+        const ry = Math.sin(idle.t) * 5, rx = Math.cos(idle.t * 1.3) * 3;
+        gsap.set(inner, { rotationY: ry, rotationX: rx });
+        if (!mouse) light(ry / 5, -rx / 3);
+      } }));
+      // com mouse: inclina e cria paralaxe entre os cacos
+      let mouse = false, mt;
+      const toY = gsap.quickTo(tilt, 'rotationY', { duration: .6, ease: 'power3.out' });
+      const toX = gsap.quickTo(tilt, 'rotationX', { duration: .6, ease: 'power3.out' });
+      const onMove = e => {
+        const mx = e.clientX / innerWidth * 2 - 1, my = e.clientY / innerHeight * 2 - 1;
+        mouse = true; clearTimeout(mt); mt = setTimeout(() => { mouse = false; toY(0); toX(0); }, 2500);
+        toY(mx * 9); toX(-my * 7); light(mx, my);
+      };
+      addEventListener('mousemove', onMove);
+      ctx.loop({ kill: () => { removeEventListener('mousemove', onMove); clearTimeout(mt); } });
     },
     // 4 · Estilo padrão
     (s, tl) => {
@@ -279,7 +316,83 @@
     st.tl.kill();
     st.loops.forEach(l => l.kill());
     st.slide.querySelectorAll('.flyer').forEach(f => f.remove());
-    gsap.set(st.slide.querySelectorAll('*'), { clearProps: 'all' });
+    const all = [...st.slide.querySelectorAll('*')];
+    // [data-keep-style] guarda clip-path/origens geradas em JS: limpa só o movimento
+    gsap.set(all.filter(el => !el.closest('[data-keep-style]')), { clearProps: 'all' });
+    gsap.set(all.filter(el => el.closest('[data-keep-style]')), { clearProps: 'transform,opacity' });
+  }
+
+  /* ---------- Vidro estilhaçado (slide 3), inspirado em "Broken by Design" (21st.dev) ---------- */
+  function buildShatter(slide, src) {
+    const W = src.offsetWidth, H = src.offsetHeight;
+    const cx = W * .52, cy = H * .26;                 // ponto de impacto (área vazia dos cards)
+    const N = 8, rnd = (a, b) => a + Math.random() * (b - a);
+    const angles = Array.from({ length: N }, (_, i) => (i + rnd(-.28, .28)) / N * Math.PI * 2);
+    const r1 = angles.map(() => rnd(150, 270));
+    const far = Math.hypot(W, H);
+    const pt = (a, r) => [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+    const polys = [];
+    for (let i = 0; i < N; i++) {
+      const a0 = angles[i], a1 = angles[(i + 1) % N] + (i === N - 1 ? Math.PI * 2 : 0);
+      const p0 = pt(a0, r1[i]), p1 = pt(a1, r1[(i + 1) % N]);
+      polys.push({ pts: [[cx, cy], p0, p1], a: (a0 + a1) / 2, ring: 0 });
+      polys.push({ pts: [p0, pt(a0, far), pt(a1, far), p1], a: (a0 + a1) / 2, ring: 1 });
+    }
+    // recorta um polígono ao retângulo do painel (Sutherland–Hodgman)
+    const clipRect = pts => {
+      const edges = [[p => p[0] >= 0, (a, b) => { const t = -a[0] / (b[0] - a[0]); return [0, a[1] + t * (b[1] - a[1])]; }],
+        [p => p[0] <= W, (a, b) => { const t = (W - a[0]) / (b[0] - a[0]); return [W, a[1] + t * (b[1] - a[1])]; }],
+        [p => p[1] >= 0, (a, b) => { const t = -a[1] / (b[1] - a[1]); return [a[0] + t * (b[0] - a[0]), 0]; }],
+        [p => p[1] <= H, (a, b) => { const t = (H - a[1]) / (b[1] - a[1]); return [a[0] + t * (b[0] - a[0]), H]; }]];
+      let out = pts;
+      for (const [inside, cut] of edges) {
+        const inp = out; out = [];
+        inp.forEach((cur, i) => {
+          const prev = inp[(i + inp.length - 1) % inp.length];
+          if (inside(cur)) { if (!inside(prev)) out.push(cut(prev, cur)); out.push(cur); }
+          else if (inside(prev)) out.push(cut(prev, cur));
+        });
+      }
+      return out;
+    };
+    const onEdge = (a, b) => [[0, 0], [W, 0], [0, 1], [H, 1]].some(([v, k]) => Math.abs(a[k] - v) < .5 && Math.abs(b[k] - v) < .5);
+    // encolhe cada caco em direção ao centro dele: abre as frestas
+    const shrink = (pts, px) => {
+      const c = pts.reduce((m, p) => [m[0] + p[0] / pts.length, m[1] + p[1] / pts.length], [0, 0]);
+      return { c, pts: pts.map(([x, y]) => { const d = Math.hypot(x - c[0], y - c[1]) || 1; return [x - (x - c[0]) / d * px, y - (y - c[1]) / d * px]; }) };
+    };
+    const wrap = document.createElement('div');
+    wrap.className = 'shatter';
+    wrap.dataset.keepStyle = '';
+    Object.assign(wrap.style, { left: src.offsetLeft + 'px', top: src.offsetTop + 'px', width: W + 'px', height: H + 'px' });
+    wrap.innerHTML = '<div class="tilt"><div class="inner"></div></div><i class="impact"></i>';
+    const inner = wrap.querySelector('.inner');
+    polys.forEach((poly, i) => {
+      const clipped = clipRect(poly.pts);
+      if (clipped.length < 3) return;
+      // só as arestas de rachadura ganham borda de vidro (não a borda do painel)
+      const cracks = clipped.map((p, k) => [p, clipped[(k + 1) % clipped.length]]).filter(([a, b]) => !onEdge(a, b));
+      const { c, pts } = shrink(clipped, 2.5);
+      const vc = c;
+      const el = document.createElement('div');
+      el.className = 'shard';
+      const path = pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(',');
+      el.style.clipPath = `polygon(${path})`;
+      el.style.transformOrigin = `${vc[0]}px ${vc[1]}px`;
+      const clone = src.cloneNode(true);
+      clone.classList.add('shard-copy');
+      el.appendChild(clone);
+      el.insertAdjacentHTML('beforeend', `<b class="spec" style="--a:${(poly.a * 180 / Math.PI + 90).toFixed(0)}deg"></b><svg viewBox="0 0 ${W} ${H}"><path d="${cracks.map(([a, b]) => `M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${b[0].toFixed(1)} ${b[1].toFixed(1)}`).join('')}"/></svg>`);
+      const ux = Math.cos(poly.a), uy = Math.sin(poly.a);
+      el._d = { a: poly.a, ux, uy, ring: poly.ring,
+        fx: ux * rnd(1.5, 5), fy: uy * rnd(1.5, 5),
+        z: rnd(8, 46) * (poly.ring ? 1 : 1.3), rz: rnd(-.7, .7), rx: rnd(-1.6, 1.6), ry: rnd(-1.6, 1.6) };
+      inner.appendChild(el);
+    });
+    wrap.querySelector('.impact').style.cssText = `left:${cx}px;top:${cy}px`;
+    src.classList.add('is-shattered');
+    slide.appendChild(wrap);
+    return wrap;
   }
 
   function build(i, jump) {
