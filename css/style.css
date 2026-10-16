@@ -281,14 +281,14 @@ b { font-weight: 600; }
 /* mola com foto */
 .springs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: visible; }
 .spr { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.spr.red { stroke: #E8392B; } .spr.green { stroke: var(--green); }
+.spr.red { stroke: #FFFFFF; } .spr.green { stroke: var(--green); }
 .avatar { position: absolute; left: 0; top: 0; z-index: 6; cursor: grab; touch-action: none; user-select: none; will-change: transform; }
 .avatar.dragging { cursor: grabbing; }
 .avatar .face { display: block; width: 86px; height: 86px; margin: -43px 0 0 -43px; border-radius: 50%; overflow: hidden; border: 4px solid; box-shadow: 0 12px 28px rgba(0, 0, 0, .45); background: #222; }
-.avatar.red .face { border-color: #E8392B; } .avatar.green .face { border-color: var(--green); }
+.avatar.red .face { border-color: #FFFFFF; } .avatar.green .face { border-color: var(--green); }
 .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 .avatar .name { position: absolute; left: 0; top: 60px; transform: translateX(-50%); padding: 4px 14px; border-radius: 999px; font-size: 17px; font-weight: 600; white-space: nowrap; }
-.avatar.red .name { background: #E8392B; color: #fff; } .avatar.green .name { background: var(--green); color: #fff; }
+.avatar.red .name { background: #FFFFFF; color: var(--black); } .avatar.green .name { background: var(--green); color: #fff; }
 .ncard { background: var(--card-dark); border-radius: var(--r-card); padding: 40px 32px 44px; display: flex; flex-direction: column; justify-content: space-between; }
 .ncard .num { width: 54px; height: 54px; font-size: 22px; }
 .ncard h3 { font-size: 30px; white-space: nowrap; font-weight: 600; line-height: 1.25; margin-bottom: 14px; }
