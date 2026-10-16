@@ -4,6 +4,7 @@
 
 ## Abrir
 
+- **Online:** https://amandamerien.github.io/cx-slides/ (GitHub Pages; atualiza sozinho a cada push na `main`).
 - **Mais simples:** dê dois cliques em `index.html` (Chrome recomendado).
 - **Via servidor local:** dê dois cliques em `abrir.command` (abre em `http://localhost:8766`).
   Ou no Terminal, dentro desta pasta: `python3 -m http.server 8766` e abra `http://localhost:8766`.
