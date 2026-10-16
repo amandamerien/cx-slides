@@ -277,8 +277,8 @@
       // âncoras medidas antes de qualquer transform da entrada
       const a1 = rel(solo, s), a2 = rel(group, s);
       const springs = [
-        makeSpring(ctx, s.querySelector('.avatar.red'), s.querySelector('.spr.red'), { x: a1.x + a1.w * .62, y: a1.y }, { x: 96, y: -72 }),
-        makeSpring(ctx, s.querySelector('.avatar.green'), s.querySelector('.spr.green'), { x: a2.x + a2.w * .74, y: a2.y + a2.h }, { x: 150, y: 6 }),
+        makeSpring(ctx, s.querySelector('.avatar.red'), s.querySelector('.spr.red'), { x: a1.x + a1.w * .72, y: a1.y }, { x: 62, y: -78 }),
+        makeSpring(ctx, s.querySelector('.avatar.green'), s.querySelector('.spr.green'), { x: a2.x + a2.w * .74, y: a2.y + a2.h }, { x: 132, y: -6 }),
       ];
       tl.from(s.querySelector('.top-pill'), up(20))
         .from(s.querySelector('.top-title'), up(), '-=.4')
