@@ -42,6 +42,10 @@ Cada slide vira uma página 1920×1080 no estado final.
 
 As 25 seções ficam em `img/secoes/` (JPEG 800px). Para incluir outra, adicione `<figure class="shot"><img src="img/secoes/arquivo.jpg" alt=""></figure>` numa das duas faixas do slide 17 no `index.html`. As duas faixas se duplicam sozinhas para o loop não ter emenda.
 
+## Publicar mudanças
+
+Antes de cada commit, rode `./versao.sh`: ele troca o número de versão dos arquivos CSS/JS no `index.html`, para o navegador não misturar arquivo novo com antigo do cache (o GitHub Pages guarda por 10 min).
+
 ## Cores
 
 Paleta do Figma Clickmax: verde `#7AC158` (pílulas, números, destaques), gradiente `#B9ED80 → #85CD44 → #48B879` (orbes e cards verdes), preto `#0E0E0E`, cinza `#E9EAEC`. Tudo em variáveis no topo de `css/style.css`.
