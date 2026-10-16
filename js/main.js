@@ -47,7 +47,6 @@
     const a = el.getBoundingClientRect(), b = ref.getBoundingClientRect();
     return { x: (a.left - b.left) / scale, y: (a.top - b.top) / scale, w: a.width / scale, h: a.height / scale };
   };
-  const float = (ctx, el, dy, dx, dur, delay = 0) => ctx.loop(gsap.to(el, { y: `+=${dy}`, x: `+=${dx}`, duration: dur, ease: 'sine.inOut', yoyo: true, repeat: -1, delay }));
 
   /* Cada builder recebe (s, tl, ctx). ctx.loop() registra animações contínuas;
      ctx.done() registra o que começa quando a entrada termina. */
@@ -117,14 +116,10 @@
       });
     },
     // 6 · O que decidimos
-    (s, tl, ctx) => {
-      const sp = s.querySelector('.sphere');
-      tl.from(sp, { scale: .5, opacity: 0, duration: .8, ease: 'back.out(1.4)' }, 0)
-        .from(s.querySelector('.pill'), up(20), .1)
-        .from(s.querySelectorAll('.w'), { y: 40, opacity: 0, duration: .5, ease: EASE, stagger: .07 }, .3)
+    (s, tl) => {
+      tl.from(s.querySelector('.pill'), up(20))
+        .from(s.querySelectorAll('.w'), { y: 40, opacity: 0, duration: .5, ease: EASE, stagger: .07 }, .2)
         .from(s.querySelector('.lead'), up(20), '-=.2');
-      ctx.loop(gsap.to(sp, { scale: 1.06, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: .8 }));
-      float(ctx, sp, -14, 0, 3.4);
     },
     // 7 · Fluxo
     (s, tl) => {
@@ -220,13 +215,10 @@
       });
     },
     // 12 · Argumento
-    (s, tl, ctx) => {
-      const sp = s.querySelector('.sphere');
-      tl.from(sp, { scale: .5, opacity: 0, duration: .8, ease: 'back.out(1.4)' }, 0)
-        .from(s.querySelector('.top-pill'), up(20), .1)
-        .from(s.querySelector('.s12-title'), { y: 60, opacity: 0, duration: .8, ease: 'power4.out' }, .2)
+    (s, tl) => {
+      tl.from(s.querySelector('.top-pill'), up(20))
+        .from(s.querySelector('.s12-title'), { y: 60, opacity: 0, duration: .8, ease: 'power4.out' }, .1)
         .from(s.querySelectorAll('.trio .tcard'), { y: 120, opacity: 0, duration: .7, ease: EASE, stagger: .16 }, '-=.2');
-      float(ctx, sp, -18, -6, 4.4);
     },
     // 13 · Captura
     sectionsBuilder,

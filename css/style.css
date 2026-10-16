@@ -86,19 +86,6 @@ b { font-weight: 600; }
 .top-title { position: absolute; left: var(--x); top: 222px; }
 .side-note { position: absolute; left: 1268px; top: 236px; font-size: 23px; line-height: 1.6; }
 
-/* ---------- Spheres ---------- */
-.sphere { position: absolute; border-radius: 50%;
-  overflow: hidden;
-  background: linear-gradient(160deg, #B9ED80 0%, #85CD44 58%, #48B879 100%);
-  box-shadow: inset 0 0 30px rgba(237, 255, 210, .4), 0 30px 90px rgba(122, 193, 88, .16);
-  will-change: transform; }
-/* linhas do orbe, como no Figma */
-.sphere::before, .sphere::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
-.sphere::before { left: 8%; top: 14%; width: 118%; height: 100%; border: 2px solid rgba(239, 255, 217, .28); transform: rotate(-18deg); }
-.sphere::after { left: 14%; top: 22%; width: 110%; height: 96%; border: 3px solid rgba(72, 184, 121, .35); transform: rotate(-8deg); }
-.s6-sphere { width: 360px; height: 360px; left: 1380px; top: 555px; }
-.s12-sphere { width: 240px; height: 240px; left: 1500px; top: 150px; }
-
 /* ---------- 1 · Capa ---------- */
 .s1-bg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .s1-content { position: absolute; left: var(--x); top: 560px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
