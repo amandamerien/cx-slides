@@ -90,7 +90,23 @@
       tl.from(b, { y: 50, opacity: 0, duration: .6, ease: EASE }, '+=.05')
         .fromTo(b, { boxShadow: '0 0 0 0 rgba(122,193,88,0)' }, { boxShadow: '0 0 0 3px rgba(122,193,88,.9), 0 0 70px 0 rgba(122,193,88,.35)', duration: .4, ease: 'power2.out', yoyo: true, repeat: 1 })
         .from(b.querySelectorAll('.pill'), { scale: .6, opacity: 0, backgroundColor: '#2A2A2C', color: '#A3A5AA', duration: .5, ease: 'back.out(2)', stagger: .12 }, '<')
-        .from(b.querySelector('p'), up(20), '-=.2');
+        .from(b.querySelector('p'), up(20), '-=.2')
+        .from(b.querySelectorAll('.picker i'), { scale: 0, duration: .4, ease: 'back.out(2.4)', stagger: .06 }, '-=.1')
+        .from(b.querySelector('.pick-ring'), { scale: .4, opacity: 0, duration: .35, ease: 'back.out(2)' }, '-=.1');
+      // em loop: o anel escolhe uma cor e os badges trocam para ela (termina de volta no verde)
+      ctx.done(() => {
+        const dots = [...b.querySelectorAll('.picker i')], ring = b.querySelector('.pick-ring'), pills = b.querySelectorAll('.chips .pill');
+        const step = dots[1].offsetLeft - dots[0].offsetLeft;
+        const cycle = gsap.timeline({ repeat: -1, delay: .8 });
+        [...dots.keys()].slice(1).concat(0).forEach(i => {
+          const c = getComputedStyle(dots[i]).getPropertyValue('--c').trim();
+          cycle.to(ring, { x: i * step, duration: .45, ease: 'power3.inOut' })
+            .fromTo(dots[i], { scale: 1 }, { scale: .82, duration: .12, yoyo: true, repeat: 1, ease: 'power2.out' })
+            .to(pills, { backgroundColor: c, duration: .35, ease: 'power2.out', stagger: .08 }, '<')
+            .to({}, { duration: 1.1 });
+        });
+        ctx.loop(cycle);
+      });
     },
     // 5 · Caixa vazia × imagem real (seção "Autoridade" do Figma)
     (s, tl, ctx) => {

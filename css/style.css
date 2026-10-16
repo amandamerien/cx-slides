@@ -146,6 +146,11 @@ b { font-weight: 600; }
 .swatches i { width: 88px; height: 88px; border-radius: 20px; }
 .sw1 { background: #FFFFFF; box-shadow: inset 0 0 0 2px #E1E3E6; } .sw2 { background: #25282C; } .sw3 { background: #6E737B; } .sw4 { background: #DCDFE4; }
 .chips { display: flex; gap: 12px; margin: 26px 0 30px; }
+/* seletor de cor do card "Proposta" (slide 4) */
+.picker { position: relative; display: flex; gap: 12px; margin-top: auto; }
+.picker i { display: block; width: 46px; height: 46px; border-radius: 50%; background: var(--c); }
+.picker i:nth-child(1) { --c: #7AC158; } .picker i:nth-child(2) { --c: #3B8FE6; } .picker i:nth-child(3) { --c: #D4A84F; } .picker i:nth-child(4) { --c: #E0389E; } .picker i:nth-child(5) { --c: #C26A38; } .picker i:nth-child(6) { --c: #8E1E3C; }
+.pick-ring { position: absolute; left: -6px; top: -6px; width: 58px; height: 58px; border-radius: 50%; border: 3px solid #fff; pointer-events: none; }
 /* slide 5: seção "Autoridade" do Figma (1440×857) em miniatura */
 .mockbox { position: relative; width: 100%; height: 256px; margin: 20px 0 22px; border-radius: 16px; overflow: hidden; background: #FEFDF7; flex: none; }
 .auth { position: absolute; left: 50%; top: 50%; width: 1440px; height: 857px; transform: translate(-50%, -50%) scale(.34); font-family: 'Inter', sans-serif; }
