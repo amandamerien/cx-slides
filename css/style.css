@@ -91,22 +91,21 @@ b { font-weight: 600; }
 .s1-content { position: absolute; left: var(--x); top: 560px; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
 .s1-content .t-hero { margin-top: 30px; font-size: 88px; line-height: 1.12; }
 .s1-sub { margin-top: 26px; }
-.s1-by { margin-top: 22px; font-size: 24px; }
+.s1-by { position: absolute; right: var(--x); bottom: 128px; font-size: 24px; text-align: right; }
 /* capa: topo claro do shader pede logo e menu escuros */
 .slide.cover .logo { filter: none; }
 .slide.cover .nav span { color: rgba(14, 14, 14, .62); }
 .slide.cover .nav span.on { color: var(--black); }
-.slide.cover .s1-content .pill { background: var(--black); color: var(--white); }
 .slide.dark .s1-content .s1-sub { color: #D5DDD2; }
-.slide.dark .s1-content .s1-by { color: #B4C0B0; }
+.slide.cover .s1-by { color: #B4C0B0; }
 
 /* ---------- 2 · Como era ---------- */
-.s2-left { position: absolute; left: var(--x); top: 166px; width: 700px; }
+.s2-left { position: absolute; left: var(--x); top: calc(50% + 40px); transform: translateY(-50%); width: 700px; }
 .s2-left .t-h2 { margin-top: 36px; }
 .s2-left .body { margin-top: 30px; font-size: 25px; }
 .s2-left .body + .body { margin-top: 30px; }
 .s2-left .body b { color: var(--black); }
-.s2-grid { position: absolute; left: 893px; top: 166px; width: 899px; display: grid; grid-template-columns: 1fr 1fr; gap: 21px 21px; }
+.s2-grid { position: absolute; left: 893px; top: calc(50% + 40px); transform: translateY(-50%); width: 899px; display: grid; grid-template-columns: 1fr 1fr; gap: 21px 21px; }
 .brand { height: 104px; border-radius: 22px; background: var(--white); display: flex; align-items: center; justify-content: space-between; padding: 0 34px; font-size: 33px; font-weight: 500; }
 .brand i { width: 13px; height: 13px; border-radius: 50%; background: var(--green); }
 .brand.more { background: var(--black); color: var(--green); }
