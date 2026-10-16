@@ -230,6 +230,40 @@
         ctx.loop(cycle);
       });
     },
+    // 12 · Seções extras: em loop, "Pra quem é" entra em cima e "Autoridade" é adicionada embaixo
+    (s, tl, ctx) => {
+      const left = s.querySelector('.s-add-left'), bld = s.querySelector('.builder');
+      const secA = s.querySelector('.sec-a'), secB = s.querySelector('.sec-b'), add = s.querySelector('.add-btn'), cur = s.querySelector('.cursor');
+      tl.from(left.querySelector('.pill'), up(20))
+        .from(left.querySelector('.t-h2'), up(), '-=.4')
+        .from(left.querySelector('.lead'), up(20), '-=.35')
+        .from(bld.querySelector('.browser'), { x: 80, opacity: 0, duration: .7, ease: EASE }, .2);
+      // ponto do cursor sobre o botão "Adicionar seção", nas coordenadas do .builder
+      const onAdd = () => { const a = rel(add, bld); return { x: a.x + a.w * .5, y: a.y + a.h * .5 }; };
+      const rest = { x: 560, y: 700 };
+      const hide = el => gsap.set(el, { height: 0, opacity: 0, marginBottom: -14 });
+      hide(secA); hide(secB); gsap.set(cur, { x: rest.x, y: rest.y, opacity: 0 });
+      tl.to(cur, { opacity: 1, duration: .3 }, '-=.2');
+      const click = (q, t) => q.to(cur, { scale: .82, duration: .1, yoyo: true, repeat: 1, transformOrigin: '20% 10%' }, t)
+        .fromTo(add, { backgroundColor: 'rgba(255,255,255,.5)' }, { backgroundColor: 'rgba(122,193,88,.35)', duration: .15, yoyo: true, repeat: 1 }, '<');
+      const reveal = (q, el) => q.to(el, { height: 'auto', opacity: 1, marginBottom: 0, duration: .65, ease: 'power3.out' })
+        .from(el.querySelector('img'), { y: -30, duration: .65, ease: 'power3.out' }, '<');
+      ctx.done(() => {
+        const loop = gsap.timeline({ repeat: -1, repeatDelay: .4, repeatRefresh: true });
+        loop.to(cur, { x: () => onAdd().x, y: () => onAdd().y, duration: .7, ease: 'power2.inOut' });
+        click(loop, '+=.05');
+        reveal(loop, secA);
+        loop.to(cur, { x: () => onAdd().x, y: () => onAdd().y + 30, duration: .7, ease: 'power2.inOut' }, '+=.35');
+        loop.to(cur, { x: () => onAdd().x, y: () => onAdd().y, duration: .25, ease: 'power2.out' });
+        click(loop, '+=.05');
+        reveal(loop, secB);
+        loop.to(cur, { x: rest.x, y: rest.y, duration: .7, ease: 'power2.inOut' }, '+=.2')
+          .to({}, { duration: 2.2 })
+          .to([secA, secB], { opacity: 0, duration: .4 })
+          .set([secA, secB], { height: 0, marginBottom: -14 });
+        ctx.loop(loop);
+      });
+    },
     // 12 · Argumento
     (s, tl) => {
       tl.from(s.querySelector('.top-pill'), up(20))

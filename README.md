@@ -1,6 +1,6 @@
 # Nova estrutura do Design.MD — apresentação animada
 
-17 slides em HTML/CSS/JS, 1920×1080 escalando para qualquer tela. Animações com GSAP 3.12.5 (já incluso em `vendor/`) e fonte Poppins local em `fonts/`. Funciona offline.
+18 slides em HTML/CSS/JS, 1920×1080 escalando para qualquer tela. Animações com GSAP 3.12.5 (já incluso em `vendor/`) e fonte Poppins local em `fonts/`. Funciona offline.
 
 ## Abrir
 
@@ -28,7 +28,7 @@
 1. Abra no **Google Chrome** (o Chrome grava em MP4; o Safari também; navegadores sem suporte a MP4 gravam em WebM).
 2. Deixe a janela em 1920×1080 ou maior, ou aperte **F** para tela cheia.
 3. Aperte **R**, escolha **esta aba** no aviso de compartilhamento e confirme.
-4. A apresentação roda sozinha do slide 1 ao 17 (cada slide fica ~2,6 s parado após a animação) e, ao final, baixa `nova-estrutura-design-md.mp4`.
+4. A apresentação roda sozinha do slide 1 ao 18 (cada slide fica ~2,6 s parado após a animação) e, ao final, baixa `nova-estrutura-design-md.mp4`.
 
 Alternativa sem o botão: aperte **P** e grave a tela com o QuickTime (`⌘ + Shift + 5` → Gravar tela inteira).
 Para converter um WebM em MP4 (se precisar): `ffmpeg -i video.webm -c:v libx264 -pix_fmt yuv420p video.mp4`.
@@ -38,9 +38,9 @@ Para converter um WebM em MP4 (se precisar): `ffmpeg -i video.webm -c:v libx264 
 No Chrome: `⌘ + P` → Destino **Salvar como PDF** → Margens **Nenhuma** → marque **Gráficos de plano de fundo**.
 Cada slide vira uma página 1920×1080 no estado final.
 
-## Carrossel de seções (slide 17)
+## Carrossel de seções (slide 18)
 
-As 25 seções ficam em `img/secoes/` (JPEG 800px). Para incluir outra, adicione `<figure class="shot"><img src="img/secoes/arquivo.jpg" alt=""></figure>` numa das duas faixas do slide 17 no `index.html`. As duas faixas se duplicam sozinhas para o loop não ter emenda.
+As 25 seções ficam em `img/secoes/` (JPEG 800px). Para incluir outra, adicione `<figure class="shot"><img src="img/secoes/arquivo.jpg" alt=""></figure>` numa das duas faixas do slide 18 no `index.html`. As duas faixas se duplicam sozinhas para o loop não ter emenda.
 
 ## Publicar mudanças
 
