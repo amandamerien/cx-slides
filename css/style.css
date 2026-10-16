@@ -191,8 +191,7 @@ b { font-weight: 600; }
 .q.dark p { color: var(--text-dark); }
 
 /* ---------- 9 · Etapas ---------- */
-.s9-left { position: absolute; left: var(--x); top: 156px; width: 560px; }
-.s9-left .pill { width: 309px; }
+.s9-left { position: absolute; left: var(--x); top: 156px; width: 560px; white-space: nowrap; }
 .s9-left .t-h2 { margin-top: 36px; font-size: 60px; line-height: 1.05; }
 .note-card { position: absolute; left: var(--x); top: 774px; width: 516px; height: 180px; background: var(--black); color: var(--white); border-radius: 26px; padding: 36px 36px; }
 .note-card b { color: var(--green); font-size: 23px; }
