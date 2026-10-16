@@ -170,10 +170,10 @@ b { font-weight: 600; }
 .flow-note { position: absolute; left: var(--x); top: 905px; font-size: 25px; }
 
 /* ---------- 8 · Questionário ---------- */
-.s8-left { position: absolute; left: var(--x); top: 156px; width: 580px; }
+.s8-left { position: absolute; left: var(--x); top: calc(50% + 40px); transform: translateY(-50%); width: 580px; }
 .s8-left .t-h2 { margin-top: 32px; font-size: 60px; }
 .s8-left .body { margin-top: 30px; font-size: 25px; line-height: 1.55; }
-.questions { position: absolute; left: 750px; top: 159px; width: 1042px; display: flex; flex-direction: column; gap: 24px; }
+.questions { position: absolute; left: 750px; top: calc(50% + 40px); transform: translateY(-50%); width: 1042px; display: flex; flex-direction: column; gap: 24px; }
 .q { background: var(--white); border-radius: 26px; padding: 30px 38px 32px; display: flex; gap: 26px; align-items: flex-start; }
 .q .num { width: 52px; height: 52px; font-size: 22px; margin-top: 2px; }
 .q h3 { font-size: 32px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
