@@ -273,7 +273,22 @@ b { font-weight: 600; }
 .dcard p { font-size: 22px; color: var(--text-light); }
 
 /* ---------- 16 · Próximos passos ---------- */
-.grid4 { position: absolute; left: var(--x); top: 348px; width: 1664px; height: 603px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 21px; }
+.s16 { position: absolute; left: var(--x); top: 404px; width: 1664px; height: 560px; display: flex; gap: 40px; }
+.s16 .solo { flex: none; width: 400px; margin: 22px 0; }
+.s16-group { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 22px; border-radius: 38px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .08); }
+.s16 .ncard { padding: 40px 30px 44px; }
+.s16 .ncard h3 { white-space: normal; font-size: 29px; }
+/* mola com foto */
+.springs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; overflow: visible; }
+.spr { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.spr.red { stroke: #E8392B; } .spr.green { stroke: var(--green); }
+.avatar { position: absolute; left: 0; top: 0; z-index: 6; cursor: grab; touch-action: none; user-select: none; will-change: transform; }
+.avatar.dragging { cursor: grabbing; }
+.avatar .face { display: block; width: 108px; height: 108px; margin: -54px 0 0 -54px; border-radius: 50%; overflow: hidden; border: 5px solid; box-shadow: 0 14px 34px rgba(0, 0, 0, .45); background: #222; }
+.avatar.red .face { border-color: #E8392B; } .avatar.green .face { border-color: var(--green); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.avatar .name { position: absolute; left: 0; top: 60px; transform: translateX(-50%); padding: 4px 14px; border-radius: 999px; font-size: 17px; font-weight: 600; white-space: nowrap; }
+.avatar.red .name { background: #E8392B; color: #fff; } .avatar.green .name { background: var(--green); color: #fff; }
 .ncard { background: var(--card-dark); border-radius: var(--r-card); padding: 40px 32px 44px; display: flex; flex-direction: column; justify-content: space-between; }
 .ncard .num { width: 54px; height: 54px; font-size: 22px; }
 .ncard h3 { font-size: 30px; white-space: nowrap; font-weight: 600; line-height: 1.25; margin-bottom: 14px; }

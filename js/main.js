@@ -270,14 +270,27 @@
         .fromTo(cards, { y: 30, opacity: 0 }, { y: 0, opacity: .35, duration: .55, ease: EASE, stagger: .1 }, '-=.2')
         .to(cards, { opacity: 1, duration: .8, ease: 'power1.inOut', stagger: .05 }, '+=.35');
     },
-    // 16 · Próximos passos
-    (s, tl) => {
+    // 16 · Próximos passos: fotos presas por mola (Cabral em vermelho, Amanda em verde)
+    (s, tl, ctx) => {
+      const solo = s.querySelector('.solo'), group = s.querySelector('.s16-group');
       const cards = s.querySelectorAll('.ncard');
+      // âncoras medidas antes de qualquer transform da entrada
+      const a1 = rel(solo, s), a2 = rel(group, s);
+      const springs = [
+        makeSpring(ctx, s.querySelector('.avatar.red'), s.querySelector('.spr.red'), { x: a1.x + a1.w * .62, y: a1.y }, { x: 96, y: -72 }),
+        makeSpring(ctx, s.querySelector('.avatar.green'), s.querySelector('.spr.green'), { x: a2.x + a2.w * .74, y: a2.y + a2.h }, { x: 150, y: 6 }),
+      ];
       tl.from(s.querySelector('.top-pill'), up(20))
         .from(s.querySelector('.top-title'), up(), '-=.4')
-        .from(cards, { y: 70, opacity: 0, duration: .65, ease: EASE, stagger: .18 }, '-=.25')
-        .from(s.querySelectorAll('.ncard .num'), { scale: 0, duration: .45, ease: 'back.out(2.4)', stagger: .18 }, '<.2')
+        .from(solo, { y: 70, opacity: 0, duration: .65, ease: EASE }, '-=.25')
+        .from(group, { opacity: 0, scale: .97, duration: .6, ease: EASE }, '-=.45')
+        .from(group.querySelectorAll('.ncard'), { y: 50, opacity: 0, duration: .6, ease: EASE, stagger: .14 }, '-=.4')
+        .from(s.querySelectorAll('.ncard .num'), { scale: 0, duration: .45, ease: 'back.out(2.4)', stagger: .12 }, '-=.5')
         .fromTo(cards[0], { boxShadow: '0 0 0 0 rgba(122,193,88,0)' }, { boxShadow: '0 0 60px 6px rgba(122,193,88,.45)', duration: .45, yoyo: true, repeat: 1, ease: 'power2.out' }, '-=.1');
+      // as fotos saltam da âncora quando os cards já estão no lugar
+      springs.forEach((sp, i) => tl.call(() => sp.launch(), null, tl.duration() - .5 + i * .25));
+      tl.from(s.querySelectorAll('.avatar, .spr'), { opacity: 0, duration: .25 }, tl.duration() - .75);
+      ctx.done(() => springs.forEach(sp => sp.wake())); // ao voltar para o slide (já montado), a mola segue viva
     },
     // 17 · O MD do futuro: carrossel infinito de seções
     (s, tl, ctx) => {
@@ -295,6 +308,67 @@
       });
     },
   ];
+
+  /* ---------- Mola (slide 16), porte do "spring-element" do 21st.dev sem React ---------- */
+  function springPath(x1, y1, x2, y2, { coils = 9, ampMin = 9, ampMax = 22, crMin = .5, crMax = 1, bez = 9 } = {}) {
+    const dx = x2 - x1, dy = y2 - y1, dist = Math.hypot(dx, dy);
+    if (dist < 2) return `M${x1},${y1}`;
+    const d = dist / coils, h = Math.max(.8, 1 - (dist - 40) / 200);
+    const amp = Math.max(ampMin, Math.min(ampMax, ampMax * h));
+    const cr = dist <= 40 ? crMax : dist <= 120 ? crMax - ((dist - 40) / 80) * (crMax - crMin) : crMin;
+    const ux = dx / dist, uy = dy / dist, px = -uy, py = ux;
+    const out = [];
+    for (let i = 0; i < coils; i++) {
+      const sx = x1 + ux * i * d, sy = y1 + uy * i * d, ex = x1 + ux * (i + 1) * d, ey = y1 + uy * (i + 1) * d;
+      const mx = x1 + ux * (i + .5) * d + px * amp, my = y1 + uy * (i + .5) * d + py * amp;
+      out.push(i ? `L${sx},${sy}` : `M${sx},${sy}`,
+        `C${sx + d * cr * ux},${sy + d * cr * uy} ${mx + ux * bez},${my + uy * bez} ${mx},${my}`,
+        `C${mx - ux * bez},${my - uy * bez} ${ex - d * cr * ux},${ey - d * cr * uy} ${ex},${ey}`);
+    }
+    return out.join(' ');
+  }
+
+  // física de mola (rigidez 200, amortecimento 16, como no original) + arraste + balanço sozinho
+  function makeSpring(ctx, el, path, anchor, rest) {
+    const p = { x: rest.x, y: rest.y }, v = { x: 0, y: 0 };
+    let target = rest, drag = null, nextKick = 2, idleT = 0, live = false;
+    const draw = () => {
+      el.style.transform = `translate(${anchor.x + p.x}px, ${anchor.y + p.y}px)`;
+      path.setAttribute('d', springPath(anchor.x, anchor.y, anchor.x + p.x, anchor.y + p.y));
+    };
+    const step = () => {
+      if (!live) return;
+      let dt = Math.min(gsap.ticker.deltaRatio(60) / 60, .05);
+      const n = 4; dt /= n;
+      for (let i = 0; i < n; i++) {
+        v.x += (-200 * (p.x - target.x) - 16 * v.x) * dt; v.y += (-200 * (p.y - target.y) - 16 * v.y) * dt;
+        p.x += v.x * dt; p.y += v.y * dt;
+      }
+      if (!drag && (idleT += dt * n) > nextKick) { // de vez em quando leva um "peteleco"
+        idleT = 0; nextKick = 2 + Math.random() * 1.6;
+        const ang = Math.random() * Math.PI * 2; v.x += Math.cos(ang) * 520; v.y += Math.sin(ang) * 520;
+      }
+      draw();
+    };
+    const stagePt = e => { const r = stage.getBoundingClientRect(); return { x: (e.clientX - r.left) / scale, y: (e.clientY - r.top) / scale }; };
+    const down = e => { e.stopPropagation(); try { el.setPointerCapture(e.pointerId); } catch {} el.classList.add('dragging'); const q = stagePt(e); drag = { dx: anchor.x + p.x - q.x, dy: anchor.y + p.y - q.y }; };
+    const move = e => { if (!drag) return; const q = stagePt(e); target = { x: q.x + drag.dx - anchor.x, y: q.y + drag.dy - anchor.y }; };
+    const release = () => { if (!drag) return; drag = null; target = rest; el.classList.remove('dragging'); idleT = 0; };
+    const stop = e => e.stopPropagation(); // não deixa o clique avançar o slide
+    el.addEventListener('pointerdown', down); el.addEventListener('pointermove', move);
+    el.addEventListener('pointerup', release); el.addEventListener('pointercancel', release); el.addEventListener('click', stop);
+    draw();
+    gsap.ticker.add(step);
+    ctx.loop({ kill: () => {
+      live = false; gsap.ticker.remove(step);
+      el.removeEventListener('pointerdown', down); el.removeEventListener('pointermove', move);
+      el.removeEventListener('pointerup', release); el.removeEventListener('pointercancel', release); el.removeEventListener('click', stop);
+    } });
+    return {
+      launch() { p.x = 0; p.y = 0; v.x = rest.x * 9; v.y = rest.y * 9; live = !reduce.matches; draw(); if (!live) { p.x = rest.x; p.y = rest.y; draw(); } },
+      wake() { if (!live && !reduce.matches) live = true; },
+    };
+  }
 
   function sectionsBuilder(s, tl) {
     tl.from(s.querySelector('.pill'), up(20))
