@@ -194,8 +194,8 @@
         .from(s.querySelectorAll('.tcard'), { y: 40, scale: .94, opacity: 0, duration: .55, ease: EASE, stagger: .07 }, '-=.2')
         .to(s.querySelectorAll('.hl-green, .hl-black'), { scale: 1.04, duration: .25, ease: 'power2.out', yoyo: true, repeat: 1, stagger: .12 }, '+=.05');
     },
-    // 11 · Arquitetura: pílulas voam para a lista
-    (s, tl) => {
+    // 11 · Arquitetura: pílulas voam para a lista (em loop infinito)
+    (s, tl, ctx) => {
       const allLps = [...s.querySelectorAll('.lp')], lps = allLps.slice(0, 4);
       const rows = [...s.querySelectorAll('.s11-list .row')];
       // medir antes de qualquer transform
@@ -214,15 +214,26 @@
         .from(allLps, { scale: .6, opacity: 0, duration: .4, ease: 'back.out(2)', stagger: .05 }, '-=.2')
         .from(s.querySelector('.lib-note'), up(20), '-=.2')
         .set(rows.map(r => r.children), { opacity: 0 }, 0);
-      let t = tl.duration() + .15;
-      flights.forEach(({ f, dx, dy }, i) => {
-        const row = rows[i];
-        tl.set(f, { opacity: 1 }, t)
-          .to(f, { keyframes: { x: [0, dx * .5, dx], y: [0, dy - 60, dy], easeEach: 'none' }, duration: .75, ease: 'power2.inOut' }, t)
-          .to(f, { opacity: 0, duration: .2 }, t + .7)
-          .to(row.children, { opacity: 1, duration: .3, stagger: .05 }, t + .62)
-          .fromTo(row.querySelector('.num'), { scale: .4 }, { scale: 1, duration: .4, ease: 'back.out(2.6)' }, t + .62);
-        t += .32;
+      // um ciclo de voo: cada pílula sai da biblioteca e pousa na sua linha
+      const fly = (target, t) => {
+        flights.forEach(({ f, dx, dy }, i) => {
+          const row = rows[i];
+          target.set(f, { x: 0, y: 0, opacity: 1 }, t)
+            .to(f, { keyframes: { x: [0, dx * .5, dx], y: [0, dy - 60, dy], easeEach: 'none' }, duration: .75, ease: 'power2.inOut' }, t)
+            .to(f, { opacity: 0, duration: .2 }, t + .7)
+            .to(row.children, { opacity: 1, duration: .3, stagger: .05 }, t + .62)
+            .fromTo(row.querySelector('.num'), { scale: .4 }, { scale: 1, duration: .4, ease: 'back.out(2.6)' }, t + .62);
+          t += .32;
+        });
+        return t;
+      };
+      fly(tl, tl.duration() + .15);
+      // depois da entrada: a lista esvazia e as pílulas voam de novo, sem parar
+      ctx.done(() => {
+        const cycle = gsap.timeline({ repeat: -1, delay: 1.8, repeatDelay: 1.8 });
+        cycle.to(rows.map(r => r.children), { opacity: 0, duration: .35, ease: 'power1.in', stagger: { each: .04, from: 'end' } }, 0);
+        fly(cycle, .7);
+        ctx.loop(cycle);
       });
     },
     // 12 · Argumento
